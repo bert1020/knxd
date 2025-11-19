@@ -9,7 +9,7 @@ AddressFilter::AddressFilter(const LinkConnectPtr_ &c, IniSectionPtr &s)
     : Filter(c, s)
 {
     parseConfig(s);
-    TRACEPRINTF(t, 4, "AddressFilter (FILTER macro) initialized");
+    TRACEPRINTF(t, 0, "AddressFilter (FILTER macro) initialized");
 }
 
 AddressFilter::~AddressFilter()
@@ -343,13 +343,15 @@ eibaddr_t AddressFilter::parseGroupAddress(const std::string &addr)
     int a, b, c;
     if (sscanf(addr.c_str(), "%d/%d/%d", &a, &b, &c) != 3)
     {
+        t->TracePrintf (0, "===== parseGroupAddress error: %s", addr.c_str());
         throw std::invalid_argument("Invalid group address (X/Y/Z)");
     }
     if (a < 0 || a > 31 || b < 0 || b > 7 || c < 0 || c > 255)
     {
+        t->TracePrintf (0, "=====111 parseGroupAddress error: %s", addr.c_str());
         throw std::invalid_argument("Group address out of range");
     }
-    return ((a & 0x0F) << 11) | ((b & 0x07) << 8) | (c & 0xFF);
+    return ((a & 0x1F) << 11) | ((b & 0x07) << 8) | (c & 0xFF);
 }
 
 // 上行物理地址检查（接收方向）
