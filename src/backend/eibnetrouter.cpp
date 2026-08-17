@@ -53,8 +53,7 @@ EIBNetIPRouter::start()
       ERRORPRINTF (t, E_ERROR | 58, "interface %s not recognized", interface);
       goto err_out;
     }
-  if (multicast_ttl != 0)
-    sock->SetMulticastTTL(multicast_ttl);
+
   sock->recvall = 2;
   if (GetHostIP (t, &sock->sendaddr, multicastaddr) == 0)
     goto err_out;
@@ -112,7 +111,6 @@ EIBNetIPRouter::setup()
   port = cfg->value("port",3671);
   interface = cfg->value("interface","");
   monitor = cfg->value("monitor",false);
-  multicast_ttl = cfg->value("multicast-ttl", 0);
   return true;
 }
 

@@ -33,7 +33,6 @@ DRIVER(EIBNetIPRouter,ip)
   std::string multicastaddr;
   uint16_t port;
   bool monitor;
-  int multicast_ttl = 0;
 
   void read_cb(EIBNetIPPacket *p);
   void stop_();

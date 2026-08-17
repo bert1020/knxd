@@ -125,6 +125,20 @@ EIBNetIPSocket::EIBNetIPSocket (struct sockaddr_in bindaddr, bool reuseaddr,
       }
   }
 
+  // Set multicast TTL
+  {
+    unsigned char ttl=16;
+
+    if (setsockopt(fd, IPPROTO_IP, IP_MULTICAST_TTL,
+                   (char *)&ttl, sizeof(ttl)) < 0)
+      {
+        ERRORPRINTF (t, E_ERROR | 39, "cannot set multicast TTL: %s", strerror(errno));
+        close(fd);
+        fd = -1;
+        return;
+      }
+  }
+
   // don't really care if this fails
   if (mode == S_RD)
     shutdown (fd, SHUT_WR);
@@ -209,18 +223,6 @@ EIBNetIPSocket::SetMulticast (struct ip_mreqn multicastaddr)
       == -1)
     return false;
   multicast = true;
-  return true;
-}
-
-bool
-EIBNetIPSocket::SetMulticastTTL (int ttl)
-{
-  if (setsockopt (fd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof (ttl)) < 0)
-    {
-      ERRORPRINTF (t, E_ERROR | 54, "cannot set multicast TTL to %d: %s", ttl, strerror(errno));
-      return false;
-    }
-  TRACEPRINTF (t, 0, "Multicast TTL set to %d", ttl);
   return true;
 }
 
